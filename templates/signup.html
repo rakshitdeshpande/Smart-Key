@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up{% endblock %}
+
+{% block body_content %}
+<div class="view view-main">
+  <div class="page-content">
+    <div class="block">
+      <div id="block">
+        <p class="row text-align-justify justify-content-center">
+              <img src="static/images/logo.png">
+        </p>
+      </div>
+    </div>
+    <form action="/signup" class="external list form-store-data" id="my-form" method="POST">
+            <ul>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Name</div>
+                    <div class="item-input-wrap">
+                      <input type="text" name="name" placeholder="Your name">
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">E-mail</div>
+                    <div class="item-input-wrap">
+                      <input type="email" name="email" placeholder="E-mail">
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Gender</div>
+                    <div class="item-input-wrap">
+                      <select name="gender">
+                        <option value="male" selected>Male</option>
+                        <option value="female">Female</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                  <div class="item-content item-input">
+                    <div class="item-inner">
+                      <div class="item-title item-label">DL No.</div>
+                      <div class="item-input-wrap">
+                        <input type="text" name="DLNo" placeholder="DL No.">
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                    <div class="item-content item-input">
+                      <div class="item-inner">
+                        <div class="item-title item-label">Date of Birth</div>
+                        <div class="item-input-wrap">
+                          <input type="date" name="dob" placeholder="Date of Birth">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                      <div class="item-content item-input">
+                        <div class="item-inner">
+                          <div class="item-title item-label">Blood Group</div>
+                          <div class="item-input-wrap">
+                            <select name="Blood Group">
+                              <option value="A+" selected>A+</option>
+                              <option value="A-">A-</option>
+                              <option value="B+">B+</option>
+                              <option value="B-">B-</option>
+                              <option value="O+">O+</option>
+                              <option value="O-">O-</option>
+                              <option value="AB+">AB+</option>
+                              <option value="AB-">AB-</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                        <div class="item-content item-input">
+                          <div class="item-inner">
+                            <div class="item-title item-label">Valid till</div>
+                            <div class="item-input-wrap">
+                              <input type="date" name="valid_till" placeholder="Valid Till">
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Password</div>
+                    <div class="item-input-wrap">
+                      <input type="password" name="password" placeholder="Your Password">
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="padding">
+                <input class="col button button-fill button-round open-toast-bottom" type="submit" value="Sign Up">
+              </li>
+            </ul>
+          </form>
+          
+<!-- <form action="/signup" class="external list form-store-data" id="my-form" method="POST">
+<div class="list inline-labels no-hairlines-md">
+  <ul>
+    <li class="item-content item-input">
+      <div class="item-media">
+        <i class="icon demo-list-icon"></i>
+      </div>
+      <div class="item-inner">
+        <div class="item-title item-label">Name</div>
+        <div class="item-input-wrap">
+          <input type="text" placeholder="Your name">
+          <span class="input-clear-button"></span>
+        </div>
+      </div>
+    </li>
+    <li class="item-content item-input">
+        <div class="item-media">
+          <i class="icon demo-list-icon"></i>
+        </div>
+        <div class="item-inner">
+          <div class="item-title item-label">E-mail</div>
+          <div class="item-input-wrap">
+            <input type="email" placeholder="Your e-mail">
+            <span class="input-clear-button"></span>
+          </div>
+        </div>
+    </li>
+    <li class="item-content item-input">
+      <div class="item-media">
+        <i class="icon demo-list-icon"></i>
+      </div>
+      <div class="item-inner">
+        <div class="item-title item-label">Gender</div>
+        <div class="item-input-wrap input-dropdown-wrap">
+          <select placeholder="Please choose...">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+      </div>
+    </li>
+    <li class="item-content item-input">
+      <div class="item-media">
+        <i class="icon demo-list-icon"></i>
+      </div>
+      <div class="item-inner">
+        <div class="item-title item-label">DL No.</div>
+        <div class="item-input-wrap">
+          <input type="text" placeholder="DL No.">
+          <span class="input-clear-button"></span>
+        </div>
+      </div>
+    </li>
+    <li class="item-content item-input">
+      <div class="item-media">
+        <i class="icon demo-list-icon"></i>
+      </div>
+      <div class="item-inner">
+        <div class="item-title item-label">Date of Birth</div>
+        <div class="item-input-wrap">
+          <input type="date" value="30-12-2012" placeholder="Date of birth">
+        </div>
+      </div>
+    </li>
+    <li class="item-content item-input">
+      <div class="item-media">
+        <i class="icon demo-list-icon"></i>
+      </div>
+      <div class="item-inner">
+        <div class="item-title item-label">Blood Group</div>
+        <div class="item-input-wrap input-dropdown-wrap">
+          <select placeholder="Blood Group">
+            <option value="A+" selected>A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+             <option value="AB-">AB-</option>
+          </select>
+        </div>
+      </div>
+    </li>
+    <li class="item-content item-input">
+      <div class="item-media">
+        <i class="icon demo-list-icon"></i>
+      </div>
+      <div class="item-inner">
+        <div class="item-title item-label">Valid Till</div>
+        <div class="item-input-wrap">
+          <input type="date" value="30-12-2012" placeholder="Valid Till">
+        </div>
+      </div>
+    </li>
+    <li class="item-content item-input">
+      <div class="item-media">
+        <i class="icon demo-list-icon"></i>
+      </div>
+      <div class="item-inner">
+        <div class="item-title item-label">Phone</div>
+        <div class="item-input-wrap">
+          <input type="tel" placeholder="Your phone number">
+          <span class="input-clear-button"></span>
+        </div>
+      </div>
+    </li>
+    <li class="item-content item-input">
+      <div class="item-media">
+        <i class="icon demo-list-icon"></i>
+      </div>
+      <div class="item-inner">
+        <div class="item-title item-label">Password</div>
+        <div class="item-input-wrap">
+          <input type="password" placeholder="Your password">
+          <span class="input-clear-button"></span>
+        </div>
+      </div>
+    </li>
+    <li class="padding">
+      <input class="col button button-fill button-round open-toast-bottom" type="submit" value="Sign Up">
+    </li>
+  </ul>
+</div> 
+</form> -->
+
+
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+var $$ = Dom7;
+
+// Create bottom toast
+var toastBottom = app.toast.create({
+  text: 'Signing You Up ...',
+  closeTimeout: 3000,
+});
+
+$$('.open-toast-bottom').on('click', function () {
+  toastBottom.open();
+});
+
+</script>
+{% endblock %}

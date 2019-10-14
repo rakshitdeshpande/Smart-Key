@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block body_content %}
+<div class = "views">
+        <div class = "view view-main navbar-through">
+           
+           <div class="page">
+              <div class="page-content">
+                <!-- Static Navbar -->
+                <div class="navbar">
+                  <div class="navbar-inner">
+                    <div class="left">
+                    </div>
+                    <div class="title">Smart Key</div>
+                    <div class="right">
+                       <a href="/" class = "external"><i class="icon f7-icons color-white">home </i></a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class = "data-table card">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="label-cell">Name</th>
+                                    <th class="label-cell">Email-Id</th>
+                                    <th class="label-cell">Gender</th>
+                                    <th class="label-cell">DL No.</th>
+                                    <th class="label-cell">Date of Birth</th>
+                                    <th class="label-cell">Blood Group</th>
+                                    <th class="label-cell">Valid Till</th>
+                                    <th class="label-cell">Ignition</th>
+                                    <th class="label-cell">Lock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data %}
+                                <tr>
+                                    <td class="label-cell">{{ i["name"] }}</td>
+                                    <td class="label-cell">{{ i["email"] }}</td>
+                                    <td class="label-cell">{{ i["gender"] }}</td>
+                                    <td class="label-cell">{{ i["DLNo"] }}</td>
+                                    <td class="label-cell">{{ i["dob"] }}</td>
+                                    <td class="label-cell">{{ i["blood_group"] }}</td>
+                                    <td class="label-cell">{{ i["valid_till"] }}</td>
+                                    <td class="label-cell">{{ i["ignition"] }}</td>
+                                    <td class="label-cell">{{ i["lock"] }}</td>
+                                    <!--<td class="label-cell"><a href=#>abcd</a></td>-->
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div> 
+
+{% endblock %}
+
