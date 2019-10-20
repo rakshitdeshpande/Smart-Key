@@ -4,38 +4,31 @@ from pymongo import MongoClient
 
 app = Flask(__name__)
 
-global user
+app.secret_key = 'Smart-Key'
 
 file = open("password","r")
 string = file.read()
 client = pymongo.MongoClient(string)
 db = client.test
 
-
 @app.route('/')
 def index():
 	return render_template('index.html')
-
-@app.errorhandler(404)
-def notFound(e):
-    return render_template("404.html"), 404
 
 @app.route('/user_login', methods=['POST','GET'])
 def user_login():
     if request.method=="GET":
         return render_template("login.html")
     elif request.method == "POST" :
+        if (request.form["name"] == "admin" and request.form["password"] == "admin"):
+            session['username'] = request.form["name"]
+            return redirect('/dashboard')
         x = db.test_collection.find({"name":request.form["name"]})
-        if x[0]["password"] == request.form["password"]:
-            session['user'] = request.form["name"]
-            return redirect("/skmanager")
+        if(x[0]["password"] == request.form["password"]):
+            session['username'] = request.form['name']
+            return redirect(url_for("skmanager"))
         else:
             return redirect("/user_login")
-
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect("/user_login")
 
 @app.route('/signup',methods=['POST','GET'])
 def signup():
@@ -50,59 +43,27 @@ def signup():
          password = request.form['password']
          cred = {"name":name,"email":email,"gender":gender,"DLNo":DLNo,"dob":dob,"blood_group":blood_group,"valid_till":valid_till,"password":password}
          db.test_collection.insert(cred)
-         session['user'] = request.form["name"]
-         user = request.form["name"]
-         return redirect("/skmanager")
+         session['username'] = request.form['name']
+         return redirect(url_for("skmanager"))
     else:
         return render_template("/signup.html")
-
-    
 
 @app.route('/skmanager',methods=["POST","GET"])
 def skmanager():
     if request.method == 'GET':
-        data = db.test_collection.find({"name":session[user]})
-        return render_template('sk_manager.html',data = data)
-
-@app.route('/delete')
-def delete():
-    db.test_collection.delete_many({})
-    return render_template("sucess.html")
+        if 'username' in session:
+            user = session['username']
+            data = db.test_collection.find({"name":user})
+            return render_template('sk_manager.html',data = data)
+        return "You are not logged in <br><a href = '/user_login'></b>" + "click here to log in</b></a>"
 
 @app.route('/dashboard',methods = ['GET','POST'])
 def dashboard():
     if request.method == 'GET':
-        data = db.test_collection.find({},{"_id":0})
-        return render_template('dashboard.html',data = data)
-
-@app.route('/sample')
-def sample():
-    return render_template("sample.html")
-
-@app.route('/session')
-def session():
-    return render_template("session.html")
-
-    
-@app.route('/login',methods = ['GET','POST'])
-def login():
-    if request.method == 'POST':
-        session['name'] = request.form('name')
-        return redirect(url_for('index'))
-    return render_template("session.html")
-
-# @app.route('/index')
-# def index():
-#     if 'name' in session:
-#         #user = session['name']
-#         return "Succesfully logged in"
-#     return "You are not logged in"
-
-# @app.route('/logout')
-# def logout():
-#     session.pop('name,None')
-#     print("logged out")
-#     return redirect('/login')
+        if 'username' in session and session['username'] == "admin":
+            data = db.test_collection.find({},{"_id":0})
+            return render_template('dashboard.html',data = data)
+        return "You are not logged in <br><a href = '/user_login'></b>" + "click here to log in</b></a>"
 
 @app.route('/code',methods=['GET','POST'])
 def code():
@@ -111,9 +72,31 @@ def code():
         code = codeDetails['code']
         db.test_collection.find({})
         return "code"
-        
-    
+
+@app.route("/logout")
+def logout():
+    session.pop('username', None)
+    return redirect(url_for("index"))
+
+@app.errorhandler(404)
+def notFound(e):
+    return render_template("404.html"), 404
+    return redirect(url_for("index"))      
+
+@app.route('/delete')
+def delete():
+    db.test_collection.delete_many({})
+    return render_template("sucess.html")
+
+@app.route('/fetch')
+def fetch():
+    data = db.test_collection.find()
+    return render_template("fetch.html",data = data)
+
+@app.route('/sample')
+def sample():
+    return render_template("sample.html")
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000, threaded = True, debug = True)
-    # app.run(debug=True)
+    
