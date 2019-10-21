@@ -1,4 +1,4 @@
-import pymongo
+import pymongo,datetime
 from flask import Flask, render_template, url_for, redirect, request ,flash ,session
 from pymongo import MongoClient
 
@@ -23,7 +23,7 @@ def user_login():
         if (request.form["name"] == "admin" and request.form["password"] == "admin"):
             session['username'] = request.form["name"]
             return redirect('/dashboard')
-        x = db.test_collection.find({"name":request.form["name"]})
+        x = db.details.find({"name":request.form["name"]})
         if(x[0]["password"] == request.form["password"]):
             session['username'] = request.form['name']
             return redirect(url_for("skmanager"))
@@ -45,7 +45,7 @@ def signup():
          password = request.form['password']
          rfid = request.form['rfid']
          cred = {"name":name,"email":email,"gender":gender,"dob":dob,"blood_group":blood_group,"DLNo":DLNo,"dl_valid_till":dl_valid_till,"insuranceNo":insuranceNo,"insurance_valid_till":insurance_valid_till,"password":password,"code":rfid}
-         db.test_collection.insert(cred)
+         db.details.insert(cred)
          session['username'] = request.form['name']
          return redirect(url_for("skmanager"))
     else:
@@ -56,23 +56,27 @@ def skmanager():
     if request.method == 'GET':
         if 'username' in session:
             user = session['username']
-            data = db.test_collection.find({"name":user})
-            return render_template('sk_manager.html',data = data)
+            data = db.details.find({"name":user})
+            logs = db.logs.find({"name":user})
+            # data.update(logs)
+            return render_template('sk_manager.html',data = data,logs = logs)
         return "You are not logged in <br><a href = '/user_login'></b>" + "click here to log in</b></a>"
 
 @app.route('/dashboard',methods = ['GET','POST'])
 def dashboard():
     if request.method == 'GET':
         if 'username' in session and session['username'] == "admin":
-            data = db.test_collection.find({},{"_id":0})
-            return render_template('dashboard.html',data = data)
+            data = db.details.find({},{"_id":0})
+            user = session['username']
+            logs = db.logs.find({"name":user})
+            return render_template('dashboard.html',data = data,logs = logs)
         return "You are not logged in <br><a href = '/user_login'></b>" + "click here to log in</b></a>"
 
 @app.route('/code',methods=['GET','POST'])
 def code():
     if request.method == 'POST':
             codeDetails = request.form['code']
-            x = db.test_collection.find()
+            x = db.details.find()
             if x[0]["code"] == codeDetails :
                 return "true"
             else:
@@ -80,6 +84,11 @@ def code():
 
 @app.route("/logout")
 def logout():
+    name = session['username']
+    a = datetime.datetime.now()
+    time = a.strftime("%c")
+    log = {"name":name,"time":time}
+    db.logs.insert(log)
     session.pop('username', None)
     return redirect(url_for("index"))
 
@@ -90,12 +99,18 @@ def notFound(e):
 
 @app.route('/delete')
 def delete():
-    db.test_collection.delete_many({})
+    db.details.delete_many({})
+    # db.logs.delete_many({})
+    return render_template("sucess.html")
+
+@app.route('/clear_log')
+def clear_log():
+    db.logs.delete_many({})
     return render_template("sucess.html")
 
 @app.route('/fetch')
 def fetch():
-    data = db.test_collection.find()
+    data = db.details.find()
     return render_template("fetch.html",data = data)
 
 @app.route('/sample')

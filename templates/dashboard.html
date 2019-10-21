@@ -56,6 +56,21 @@
                             </tbody>
                         </table>
                     </div> 
-
+                    <div class = "data-table card">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="label-cell">Previous Login</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in logs %}
+                                <tr>
+                                        <td class="label-cell">{{ i["time"] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                </div>
 {% endblock %}
 
