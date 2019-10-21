@@ -40,11 +40,11 @@ def signup():
          blood_group = request.form['Blood Group']
          DLNo = request.form['DLNo']
          dl_valid_till = request.form['dl_valid_till']
-         insuranceNo  request.form['insuranceNo']
+         insuranceNo  = request.form['insuranceNo']
          insurance_valid_till = request.form['insurance_valid_till']
          password = request.form['password']
          rfid = request.form['rfid']
-         cred = {"name":name,"email":email,"gender":gender,"dob":dob,"blood_group":blood_group,"DLNo":DLNo,"dl_valid_till":dl_valid_till,"insuranceNo":insuranceNo,"insurance_valid_till":insurance_valid_till"password":password,"code":rfid}
+         cred = {"name":name,"email":email,"gender":gender,"dob":dob,"blood_group":blood_group,"DLNo":DLNo,"dl_valid_till":dl_valid_till,"insuranceNo":insuranceNo,"insurance_valid_till":insurance_valid_till,"password":password,"code":rfid}
          db.test_collection.insert(cred)
          session['username'] = request.form['name']
          return redirect(url_for("skmanager"))
