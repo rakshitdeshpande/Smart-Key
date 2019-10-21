@@ -41,7 +41,7 @@ def signup():
          blood_group = request.form['Blood Group']
          valid_till = request.form['valid_till']
          password = request.form['password']
-         cred = {"name":name,"email":email,"gender":gender,"DLNo":DLNo,"dob":dob,"blood_group":blood_group,"valid_till":valid_till,"password":password}
+         cred = {"name":name,"email":email,"gender":gender,"DLNo":DLNo,"dob":dob,"blood_group":blood_group,"valid_till":valid_till,"password":password,"code":"uid"}
          db.test_collection.insert(cred)
          session['username'] = request.form['name']
          return redirect(url_for("skmanager"))
@@ -68,10 +68,12 @@ def dashboard():
 @app.route('/code',methods=['GET','POST'])
 def code():
     if request.method == 'POST':
-        codeDetails = request.form
-        code = codeDetails['code']
-        db.test_collection.find({})
-        return "code"
+            codeDetails = request.form['code']
+            x = db.test_collection.find()
+            if x[0]["code"] == codeDetails :
+                return "true"
+            else:
+                return "false"
 
 @app.route("/logout")
 def logout():
@@ -99,4 +101,6 @@ def sample():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000, threaded = True, debug = True)
+    
+
     

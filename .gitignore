@@ -12,6 +12,6 @@ pending
 testmagic.py
 about.html
 fetch.html
+app(hardware).py
 #git add filename / git add .
 #git commit -m "your comment"
-#
