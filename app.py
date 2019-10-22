@@ -32,19 +32,22 @@ def user_login():
     if request.method=="GET":
         return render_template("login.html")
     elif request.method == "POST" :
-        if (request.form["name"] == "admin" and request.form["password"] == "admin"):
-            session['username'] = request.form["name"]
-            return redirect('/dashboard')
-        x = db.details.find({"name":request.form["name"]})
-        if(x[0]["password"] == request.form["password"]):
-            session['username'] = request.form['name']
-            email_id = x[0]["email"]
-            msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email_id])
-            msg.body = "You have successfully logged in"
-            mail.send(msg)
-            return redirect(url_for("skmanager"))
-        else:
-            return redirect("/user_login")
+        try:
+            if (request.form["name"] == "admin" and request.form["password"] == "admin"):
+                session['username'] = request.form["name"]
+                return redirect('/dashboard')
+            x = db.details.find({"name":request.form["name"]})
+            if(x[0]["password"] == request.form["password"]):
+                session['username'] = request.form['name']
+                email_id = x[0]["email"]
+                msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email_id])
+                msg.body = "You have successfully logged in"
+                mail.send(msg)
+                return redirect(url_for("skmanager"))
+            else:
+                return redirect("/login")
+        except:
+            return render_template('/login')
 
 @app.route('/signup',methods=['POST','GET'])
 def signup():
@@ -102,13 +105,16 @@ def code():
 
 @app.route("/logout")
 def logout():
-    name = session['username']
-    a = datetime.datetime.now()
-    time = a.strftime("%c")
-    log = {"name":name,"time":time}
-    db.logs.insert(log)
-    session.pop('username', None)
-    return redirect(url_for("index"))
+    try:
+        name = session['username']
+        a = datetime.datetime.now()
+        time = a.strftime("%c")
+        log = {"name":name,"time":time}
+        db.logs.insert(log)
+        session.pop('username', None)
+        return redirect(url_for("index"))
+    except:
+        return redirect(url_for("index"))
 
 @app.errorhandler(404)
 def notFound(e):
