@@ -1,6 +1,7 @@
 import pymongo,datetime
 from flask import Flask, render_template, url_for, redirect, request ,flash ,session
 from pymongo import MongoClient
+from flask_mail import Mail,Message
 
 app = Flask(__name__)
 
@@ -11,11 +12,22 @@ string = file.read()
 client = pymongo.MongoClient(string)
 db = client.test
 
+file = open("id","r")
+id = file.read()
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'rakshitdeshpande375@gmail.com'
+app.config['MAIL_PASSWORD'] = id
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+
 @app.route('/')
 def index():
 	return render_template('index.html')
 
-@app.route('/user_login', methods=['POST','GET'])
+@app.route('/login', methods=['POST','GET'])
 def user_login():
     if request.method=="GET":
         return render_template("login.html")
@@ -26,6 +38,10 @@ def user_login():
         x = db.details.find({"name":request.form["name"]})
         if(x[0]["password"] == request.form["password"]):
             session['username'] = request.form['name']
+            email_id = x[0]["email"]
+            msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email_id])
+            msg.body = "You have successfully logged in"
+            mail.send(msg)
             return redirect(url_for("skmanager"))
         else:
             return redirect("/user_login")
@@ -47,6 +63,9 @@ def signup():
          cred = {"name":name,"email":email,"gender":gender,"dob":dob,"blood_group":blood_group,"DLNo":DLNo,"dl_valid_till":dl_valid_till,"insuranceNo":insuranceNo,"insurance_valid_till":insurance_valid_till,"password":password,"code":rfid}
          db.details.insert(cred)
          session['username'] = request.form['name']
+         msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+         msg.body = "You have successfully signed in"
+         mail.send(msg)
          return redirect(url_for("skmanager"))
     else:
         return render_template("/signup.html")
@@ -58,9 +77,8 @@ def skmanager():
             user = session['username']
             data = db.details.find({"name":user})
             logs = db.logs.find({"name":user})
-            # data.update(logs)
             return render_template('sk_manager.html',data = data,logs = logs)
-        return "You are not logged in <br><a href = '/user_login'></b>" + "click here to log in</b></a>"
+        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 
 @app.route('/dashboard',methods = ['GET','POST'])
 def dashboard():
@@ -70,7 +88,7 @@ def dashboard():
             user = session['username']
             logs = db.logs.find({"name":user})
             return render_template('dashboard.html',data = data,logs = logs)
-        return "You are not logged in <br><a href = '/user_login'></b>" + "click here to log in</b></a>"
+        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 
 @app.route('/code',methods=['GET','POST'])
 def code():
@@ -119,6 +137,3 @@ def sample():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000, threaded = True, debug = True)
-    
-
-    
