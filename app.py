@@ -27,28 +27,6 @@ mail = Mail(app)
 def index():
 	return render_template('index.html')
 
-@app.route('/login', methods=['POST','GET'])
-def user_login():
-    if request.method=="GET":
-        return render_template("login.html")
-    elif request.method == "POST" :
-        try:
-            if (request.form["name"] == "admin" and request.form["password"] == "admin"):
-                session['username'] = request.form["name"]
-                return redirect('/dashboard')
-            x = db.details.find({"name":request.form["name"]})
-            if(x[0]["password"] == request.form["password"]):
-                session['username'] = request.form['name']
-                email_id = x[0]["email"]
-                msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email_id])
-                msg.body = "You have successfully logged in"
-                mail.send(msg)
-                return redirect(url_for("skmanager"))
-            else:
-                return redirect("/login")
-        except:
-            return render_template('/login')
-
 @app.route('/signup',methods=['POST','GET'])
 def signup():
     if request.method == 'POST':
@@ -63,15 +41,94 @@ def signup():
          insurance_valid_till = request.form['insurance_valid_till']
          password = request.form['password']
          rfid = request.form['rfid']
+         if name == "" or email == "" or gender == "" or dob == "" or blood_group == "" or DLNo == "" or dl_valid_till == ""or insuranceNo == ""or insurance_valid_till == ""or password == ""or rfid == "":
+             return redirect('/signup')
          cred = {"name":name,"email":email,"gender":gender,"dob":dob,"blood_group":blood_group,"DLNo":DLNo,"dl_valid_till":dl_valid_till,"insuranceNo":insuranceNo,"insurance_valid_till":insurance_valid_till,"password":password,"code":rfid}
          db.details.insert(cred)
          session['username'] = request.form['name']
-         msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-         msg.body = "You have successfully signed in"
-         mail.send(msg)
+         y = datetime.datetime.now()
+         date = y.strftime("%d")
+         month = y.strftime("%m")
+         year = y.strftime("%Y")
+         
+         x = db.details.find({"name":name})
+         z = x[0]["dl_valid_till"]
+         valid = z.split("-")
+         if valid[0]>year:
+             print("dl valid")
+         elif valid[0]>=year and valid[1]>month:
+	         print("dl valid")
+         elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
+	         print("dl valid")
+         else:
+	         print("dl invalid")
+                
+         z = x[0]["insurance_valid_till"]
+         valid = z.split("-")
+         if valid[0]>year:
+	         print("insurance valid")
+         elif valid[0]>=year and valid[1]>month:
+	         print("insurance valid")
+         elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
+	         print("insurance valid")
+         else:
+	         print("insurance invalid")
+             
+        #  msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+        #  msg.body = "You have successfully signed in"
+        #  mail.send(msg)
          return redirect(url_for("skmanager"))
     else:
         return render_template("/signup.html")
+
+@app.route('/login', methods=['POST','GET'])
+def login():
+    if request.method=="GET":
+        return render_template("login.html")
+    elif request.method == "POST" :
+        try:
+            if (request.form["name"] == "admin" and request.form["password"] == "admin"):
+                session['username'] = request.form["name"]
+                return redirect('/dashboard')
+            x = db.details.find({"name":request.form["name"]})
+            if(x[0]["password"] == request.form["password"]):
+                y = datetime.datetime.now()
+                date = y.strftime("%d")
+                month = y.strftime("%m")
+                year = y.strftime("%Y")
+
+                z = x[0]["dl_valid_till"]
+                valid = z.split("-")
+                if valid[0]>year:
+	                print("dl valid")
+                elif valid[0]>=year and valid[1]>month:
+	                print("dl valid")
+                elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
+	                print("dl valid")
+                else:
+	                print("dl invalid")
+                
+                z = x[0]["insurance_valid_till"]
+                valid = z.split("-")
+                if valid[0]>year:
+	                print("insurance valid")
+                elif valid[0]>=year and valid[1]>month:
+	                print("insurance valid")
+                elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
+	                print("insurance valid")
+                else:
+	                print("insurance invalid")
+
+                session['username'] = request.form['name']
+                email_id = x[0]["email"]
+                # msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email_id])
+                # msg.body = "You have successfully logged in"
+                # mail.send(msg)
+                return redirect(url_for("skmanager"))
+            else:
+                return redirect("/login")
+        except:
+            return redirect('/login')
 
 @app.route('/skmanager',methods=["POST","GET"])
 def skmanager():
