@@ -32,6 +32,7 @@ def signup():
     if request.method == 'POST':
          name = request.form['name']
          email = request.form['email']
+         phone = request.form['phone_number']
          gender = request.form['gender']
          dob = request.form['dob']
          blood_group = request.form['Blood Group']
@@ -43,7 +44,7 @@ def signup():
          rfid = request.form['rfid']
          if name == "" or email == "" or gender == "" or dob == "" or blood_group == "" or DLNo == "" or dl_valid_till == ""or insuranceNo == ""or insurance_valid_till == ""or password == ""or rfid == "":
              return redirect('/signup')
-         cred = {"name":name,"email":email,"gender":gender,"dob":dob,"blood_group":blood_group,"DLNo":DLNo,"dl_valid_till":dl_valid_till,"insuranceNo":insuranceNo,"insurance_valid_till":insurance_valid_till,"password":password,"code":rfid}
+         cred = {"name":name,"email":email,"phone_number":phone,"gender":gender,"dob":dob,"blood_group":blood_group,"DLNo":DLNo,"dl_valid_till":dl_valid_till,"insuranceNo":insuranceNo,"insurance_valid_till":insurance_valid_till,"password":password,"code":rfid,"ignition_status":"off","dl_validity":"","insurance_validity":""}
          db.details.insert(cred)
          session['username'] = request.form['name']
          y = datetime.datetime.now()
@@ -51,40 +52,42 @@ def signup():
          month = y.strftime("%m")
          year = y.strftime("%Y")
          
-        #  x = db.details.find({"name":name})
-        #  z = x[0]["dl_valid_till"]
-        #  valid = z.split("-")
-        #  if valid[0]>year:
-        #      print("dl valid")
-        #  elif valid[0]>=year and valid[1]>month:
-	    #      print("dl valid")
-        #  elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
-	    #      print("dl valid")
-        #  else:
-        #      msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-        #      msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
-        #      mail.send(msg)
+         x = db.details.find({"name":name})
+         z = x[0]["dl_valid_till"]
+         valid = z.split("-")
+         if valid[0]>year:
+             db.details.update({"name":name},{"$set":{"dl_validity":"Valid"}})
+         elif valid[0]>=year and valid[1]>month:
+	         db.details.update({"name":name},{"$set":{"dl_validity":"Valid"}})
+         elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
+	         db.details.update({"name":name},{"$set":{"dl_validity":"Valid"}})
+         else:
+             db.details.update({"name":name},{"$set":{"dl_validity":"In Valid"}})
+             msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+             msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
+             mail.send(msg)
          
-        #  z = x[0]["insurance_valid_till"]
-        #  valid = z.split("-")
-        #  if valid[0]>year:
-	    #      print("insurance valid")
-        #  elif valid[0]>=year and valid[1]>month:
-	    #      print("insurance valid")
-        #  elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
-	    #      print("insurance valid")
-        #  else:
-        #      msg = Message('Insurance Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-        #      msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
-        #      mail.send(msg)
+         z = x[0]["insurance_valid_till"]
+         valid = z.split("-")
+         if valid[0]>year:
+	         db.details.update({"name":name},{"$set":{"insurance_validity":"Valid"}})
+         elif valid[0]>=year and valid[1]>month:
+	         db.details.update({"name":name},{"$set":{"insurance_validity":"Valid"}})
+         elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
+             db.details.update({"name":name},{"$set":{"insurance_validity":"Valid"}})
+         else:
+             db.details.update({"name":name},{"$set":{"insurance_validity":"In Valid"}})
+             msg = Message('Insurance Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+             msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
+             mail.send(msg)
         
          a = datetime.datetime.now()
          time = a.strftime("%c")
          log = {"name":request.form["name"],"login_time":time,"logout_time":"-"}
          db.logs.insert(log)    
-        #  msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-        #  msg.body = "You have successfully signed in"
-        #  mail.send(msg)
+         msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+         msg.body = "You have successfully signed in"
+         mail.send(msg)
          return redirect(url_for("skmanager"))
     else:
         return render_template("/signup.html")
@@ -100,44 +103,44 @@ def login():
                 return redirect('/dashboard')
             x = db.details.find({"name":request.form["name"]})
             if(x[0]["password"] == request.form["password"]):
+                session['username'] = request.form['name']
+                name = session['username']
                 y = datetime.datetime.now()
                 date = y.strftime("%d")
                 month = y.strftime("%m")
                 year = y.strftime("%Y")
-
-                # z = x[0]["dl_valid_till"]
-                # valid = z.split("-")
-                # if valid[0]>year:
-	            #     print("dl valid")
-                # elif valid[0]>=year and valid[1]>month:
-	            #     print("dl valid")
-                # elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
-	            #     print("dl valid")
-                # else:
-                #     email = x[0]["email"]
-                #     msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-                #     msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
-                #     mail.send(msg)
+                email = x[0]["email"]
+                z = x[0]["dl_valid_till"]
+                valid = z.split("-")
+                if valid[0]>year:
+	                db.details.update({"name":name},{"$set":{"dl_validity":"Valid"}})
+                elif valid[0]>=year and valid[1]>month:
+	                db.details.update({"name":name},{"$set":{"dl_validity":"Valid"}})
+                elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
+	                db.details.update({"name":name},{"$set":{"dl_validity":"Valid"}})
+                else:
+                    db.details.update({"name":name},{"$set":{"dl_validity":"In Valid"}})
+                    msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                    msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
+                    mail.send(msg)
                 
-                # z = x[0]["insurance_valid_till"]
-                # valid = z.split("-")
-                # if valid[0]>year:
-	            #     print("insurance valid")
-                # elif valid[0]>=year and valid[1]>month:
-	            #     print("insurance valid")
-                # elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
-	            #     print("insurance valid")
-                # else:
-                #     email = x[0]["email"]
-                #     msg = Message('Insurance Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-                #     msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
-                #     mail.send(msg)
+                z = x[0]["insurance_valid_till"]
+                valid = z.split("-")
+                if valid[0]>year:
+	                db.details.update({"name":name},{"$set":{"insurance_validity":"Valid"}})
+                elif valid[0]>=year and valid[1]>month:
+	                db.details.update({"name":name},{"$set":{"insurance_validity":"Valid"}})
+                elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
+	                db.details.update({"name":name},{"$set":{"insurance_validity":"Valid"}})
+                else:
+                    db.details.update({"name":name},{"$set":{"insurance_validity":"In Valid"}})
+                    msg = Message('Insurance Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                    msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
+                    mail.send(msg)
 
-                session['username'] = request.form['name']
-                email_id = x[0]["email"]
-                # msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email_id])
-                # msg.body = "You have successfully logged in"
-                # mail.send(msg)
+                msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                msg.body = "You have successfully logged in"
+                mail.send(msg)
                 a = datetime.datetime.now()
                 time = a.strftime("%c")
                 log = {"name":request.form["name"],"login_time":time,"logout_time":"-"}
@@ -185,14 +188,16 @@ def update():
             if request.method == 'GET':
                 return render_template("update.html")
             else:
-                name = request.form['name']
                 email = request.form['email']
+                phone = request.form['phone_number']
                 dl_valid_till = request.form['dl_valid_till']
                 insurance_valid_till = request.form['insurance_valid_till']
                 password = request.form['password']
                 user = session['username']
                 if email != "":
                     db.details.update({"name":user},{"$set":{"email":email}})
+                if phone != "":
+                    db.details.update({"name":user},{"$set":{"phone_number":phone}})
                 if dl_valid_till != "":
                     db.details.update({"name":user},{"$set":{"dl_valid_till":dl_valid_till}})
                 if insurance_valid_till != "":
@@ -200,42 +205,44 @@ def update():
                 if password != "":
                     db.details.update({"name":user},{"$set":{"password":password}})
 
-                # y = datetime.datetime.now()
-                # date = y.strftime("%d")
-                # month = y.strftime("%m")
-                # year = y.strftime("%Y")
+                y = datetime.datetime.now()
+                date = y.strftime("%d")
+                month = y.strftime("%m")
+                year = y.strftime("%Y")
             
-                # x = db.details.find({"name":user})
-                # email = x[0]["email"]
-                # z = x[0]["dl_valid_till"]
-                # valid = z.split("-")
-                # if valid[0]>year:
-	            #     print("dl valid")
-                # elif valid[0]>=year and valid[1]>month:
-	            #     print("dl valid")
-                # elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
-	            #     print("dl valid")
-                # else:
-                #     msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-                #     msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
-                #     mail.send(msg)
+                x = db.details.find({"name":user})
+                email = x[0]["email"]
+                z = x[0]["dl_valid_till"]
+                valid = z.split("-")
+                if valid[0]>year:
+	                db.details.update({"name":user},{"$set":{"dl_validity":"Valid"}})
+                elif valid[0]>=year and valid[1]>month:
+	                db.details.update({"name":user},{"$set":{"dl_validity":"Valid"}})
+                elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
+	                db.details.update({"name":user},{"$set":{"dl_validity":"Valid"}})
+                else:
+                    db.details.update({"name":user},{"$set":{"dl_validity":"In Valid"}})
+                    msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                    msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
+                    mail.send(msg)
                 
-                # z = x[0]["insurance_valid_till"]
-                # valid = z.split("-")
-                # if valid[0]>year:
-	            #     print("insurance valid")
-                # elif valid[0]>=year and valid[1]>month:
-	            #     print("insurance valid")
-                # elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
-	            #     print("insurance valid")
-                # else:
-                #     msg = Message('Insurance Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-                #     msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
-                #     mail.send(msg)
+                z = x[0]["insurance_valid_till"]
+                valid = z.split("-")
+                if valid[0]>year:
+	                db.details.update({"name":user},{"$set":{"insurance_validity":"Valid"}})
+                elif valid[0]>=year and valid[1]>month:
+	                db.details.update({"name":user},{"$set":{"insurance_validity":"Valid"}})
+                elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
+	                db.details.update({"name":user},{"$set":{"insurance_validity":"Valid"}})
+                else:
+                    db.details.update({"name":user},{"$set":{"insurance_validity":"In Valid"}})
+                    msg = Message('Insurance Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                    msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
+                    mail.send(msg)
             
-                # msg = Message('Details Updation', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-                # msg.body = "Dear customer your details has been successfully updated"
-                # mail.send(msg)
+                msg = Message('Details Updated', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                msg.body = "Dear customer your details has been successfully updated"
+                mail.send(msg)
                 return redirect('/skmanager')
         except:
             return redirect('/update')
