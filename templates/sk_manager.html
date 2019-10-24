@@ -55,18 +55,20 @@
                 </tbody>
             </table>
         </div> 
-        <!-- <p align ="center">Logs</p> -->
+        <p align ="center">Logs</p>
         <div class = "data-table card">
                 <table>
                     <thead>
                         <tr>
-                            <th class="label-cell">Previous Login</th>
+                            <th class="label-cell">Login time</th>
+                            <th class="label-cell">Logout time</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for i in logs %}
                         <tr>
-                                <td class="label-cell">{{ i["time"] }}</td>
+                                <td class="label-cell">{{ i["login_time"] }}</td>
+                                <td class="label-cell">{{ i["logout_time"] }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

@@ -61,7 +61,9 @@ def signup():
          elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
 	         print("dl valid")
          else:
-	         print("dl invalid")
+             msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+             msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
+             mail.send(msg)
                 
          z = x[0]["insurance_valid_till"]
          valid = z.split("-")
@@ -72,8 +74,14 @@ def signup():
          elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
 	         print("insurance valid")
          else:
-	         print("insurance invalid")
-             
+             msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+             msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
+             mail.send(msg)
+        
+         a = datetime.datetime.now()
+         time = a.strftime("%c")
+         log = {"name":request.form["name"],"login_time":time,"logout_time":"-"}
+         db.logs.insert(log)    
         #  msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
         #  msg.body = "You have successfully signed in"
         #  mail.send(msg)
@@ -106,7 +114,10 @@ def login():
                 elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
 	                print("dl valid")
                 else:
-	                print("dl invalid")
+                    email = x[0]["email"]
+                    msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                    msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
+                    mail.send(msg)
                 
                 z = x[0]["insurance_valid_till"]
                 valid = z.split("-")
@@ -117,13 +128,20 @@ def login():
                 elif valid[0]>=year and valid[1]>=month and valid[2]>=date :
 	                print("insurance valid")
                 else:
-	                print("insurance invalid")
+                    email = x[0]["email"]
+                    msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                    msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
+                    mail.send(msg)
 
                 session['username'] = request.form['name']
                 email_id = x[0]["email"]
                 # msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email_id])
                 # msg.body = "You have successfully logged in"
                 # mail.send(msg)
+                a = datetime.datetime.now()
+                time = a.strftime("%c")
+                log = {"name":request.form["name"],"login_time":time,"logout_time":"-"}
+                db.logs.insert(log)
                 return redirect(url_for("skmanager"))
             else:
                 return redirect("/login")
@@ -166,8 +184,7 @@ def logout():
         name = session['username']
         a = datetime.datetime.now()
         time = a.strftime("%c")
-        log = {"name":name,"time":time}
-        db.logs.insert(log)
+        db.logs.update({"name":name},{"$set":{"logout_time":time}})
         session.pop('username', None)
         return redirect(url_for("index"))
     except:
