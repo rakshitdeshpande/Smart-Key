@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Sign Up{% endblock %}
+{% block title %}Update{% endblock %}
 
 {% block body_content %}
 <div class="view view-main">
@@ -18,7 +18,7 @@
         </p>
       </div>
     </div>
-    <form action="/signup" class="external list form-store-data" id="my-form" method="POST">
+    <form action="/update" class="external list form-store-data" id="my-form" method="POST">
             <ul>
               <li>
                 <div class="item-content item-input">
@@ -40,7 +40,7 @@
                   </div>
                 </div>
               </li>
-              <li>
+              <!-- <li>
                 <div class="item-content item-input">
                   <div class="item-inner">
                     <div class="item-title item-label">Gender</div>
@@ -52,8 +52,8 @@
                     </div>
                   </div>
                 </div>
-              </li>
-              <li>
+              </li> -->
+              <!-- <li>
                     <div class="item-content item-input">
                       <div class="item-inner">
                         <div class="item-title item-label">Date of Birth</div>
@@ -62,8 +62,8 @@
                         </div>
                       </div>
                     </div>
-              </li>
-              <li>
+              </li> -->
+              <!-- <li>
                       <div class="item-content item-input">
                         <div class="item-inner">
                           <div class="item-title item-label">Blood Group</div>
@@ -81,8 +81,8 @@
                           </div>
                         </div>
                       </div>
-              </li>
-              <li>
+              </li> -->
+              <!-- <li>
                   <div class="item-content item-input">
                     <div class="item-inner">
                       <div class="item-title item-label">DL No.</div>
@@ -91,7 +91,7 @@
                       </div>
                     </div>
                   </div>
-              </li>
+              </li> -->
                <li>
                         <div class="item-content item-input">
                           <div class="item-inner">
@@ -102,7 +102,7 @@
                           </div>
                         </div>
               </li>
-              <li>
+              <!-- <li>
                   <div class="item-content item-input">
                       <div class="item-inner">
                          <div class="item-title item-label">Insurance No.</div>
@@ -111,7 +111,7 @@
                           </div>
                         </div>
                       </div>
-                </li>
+                </li> -->
                 <li>
                     <div class="item-content item-input">
                       <div class="item-inner">
@@ -131,18 +131,8 @@
                     </div>
                   </div>
                 </li>
-                <li>
-                  <div class="item-content item-input">
-                    <div class="item-inner">
-                      <div class="item-title item-label">RFID Number</div>
-                      <div class="item-input-wrap">
-                        <input type="text" name="rfid" placeholder="RFID Number">
-                      </div>
-                    </div>
-                  </div>
-                </li>
               <li class="padding">
-                <input class="col button button-fill button-round open-toast-bottom" type="submit" value="Sign Up">
+                <input class="col button button-fill button-round open-toast-bottom" type="submit" value="Update">
               </li>
             </ul>
           </form>
@@ -160,7 +150,7 @@ var $$ = Dom7;
 
 // Create bottom toast
 var toastBottom = app.toast.create({
-  text: 'Signing You Up ...',
+  text: 'Updating ...',
   closeTimeout: 3000,
 });
 
