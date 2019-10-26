@@ -61,15 +61,15 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="label-cell">Login time</th>
-                            <th class="label-cell">Logout time</th>
+                            <th class="label-cell">Start time</th>
+                            <th class="label-cell">Stop time</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for i in logs %}
                         <tr>
-                                <td class="label-cell">{{ i["login_time"] }}</td>
-                                <td class="label-cell">{{ i["logout_time"] }}</td>
+                                <td class="label-cell">{{ i["start"] }}</td>
+                                <td class="label-cell">{{ i["stop"] }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
