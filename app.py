@@ -63,9 +63,9 @@ def signup():
 	         db.details.update({"name":name},{"$set":{"dl_validity":"Valid"}})
          else:
              db.details.update({"name":name},{"$set":{"dl_validity":"In Valid"}})
-            #  msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-            #  msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
-            #  mail.send(msg)
+             msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+             msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
+             mail.send(msg)
          
          z = x[0]["insurance_valid_till"]
          valid = z.split("-")
@@ -77,17 +77,17 @@ def signup():
              db.details.update({"name":name},{"$set":{"insurance_validity":"Valid"}})
          else:
              db.details.update({"name":name},{"$set":{"insurance_validity":"In Valid"}})
-            #  msg = Message('Insurance Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-            #  msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
-            #  mail.send(msg)
+             msg = Message('Insurance Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+             msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
+             mail.send(msg)
         
-         a = datetime.datetime.now()
-         time = a.strftime("%c")
-         log = {"name":request.form["name"],"login_time":time,"logout_time":"-"}
-         db.logs.insert(log)    
-        #  msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-        #  msg.body = "You have successfully signed in"
-        #  mail.send(msg)
+        #  a = datetime.datetime.now()
+        #  time = a.strftime("%c")
+        #  log = {"name":request.form["name"],"login_time":time,"logout_time":"-"}
+        #  db.logs.insert(log)    
+         msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+         msg.body = "You have successfully signed in"
+         mail.send(msg)
          return redirect(url_for("skmanager"))
     else:
         return render_template("/signup.html")
@@ -120,9 +120,9 @@ def login():
 	                db.details.update({"name":name},{"$set":{"dl_validity":"Valid"}})
                 else:
                     db.details.update({"name":name},{"$set":{"dl_validity":"In Valid"}})
-                    # msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-                    # msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
-                    # mail.send(msg)
+                    msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                    msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
+                    mail.send(msg)
                 
                 z = x[0]["insurance_valid_till"]
                 valid = z.split("-")
@@ -134,9 +134,9 @@ def login():
 	                db.details.update({"name":name},{"$set":{"insurance_validity":"Valid"}})
                 else:
                     db.details.update({"name":name},{"$set":{"insurance_validity":"In Valid"}})
-                    # msg = Message('Insurance Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-                    # msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
-                    # mail.send(msg)
+                    msg = Message('Insurance Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                    msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
+                    mail.send(msg)
 
                 msg = Message('RTO', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
                 msg.body = "You have successfully logged in"
@@ -212,9 +212,9 @@ def update():
 	                db.details.update({"name":user},{"$set":{"dl_validity":"Valid"}})
                 else:
                     db.details.update({"name":user},{"$set":{"dl_validity":"In Valid"}})
-                    # msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-                    # msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
-                    # mail.send(msg)
+                    msg = Message('DL Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                    msg.body = "Dear customer your Driving License has been expired, please renew it as early as possible"
+                    mail.send(msg)
                 
                 z = x[0]["insurance_valid_till"]
                 valid = z.split("-")
@@ -226,13 +226,13 @@ def update():
 	                db.details.update({"name":user},{"$set":{"insurance_validity":"Valid"}})
                 else:
                     db.details.update({"name":user},{"$set":{"insurance_validity":"In Valid"}})
-                    # msg = Message('Insurance Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-                    # msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
-                    # mail.send(msg)
+                    msg = Message('Insurance Expired', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                    msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
+                    mail.send(msg)
             
-                # msg = Message('Details Updated', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
-                # msg.body = "Dear customer your details has been successfully updated"
-                # mail.send(msg)
+                msg = Message('Details Updated', sender = 'rakshitdeshpande375@gmail.com', recipients = [email])
+                msg.body = "Dear customer your details has been successfully updated"
+                mail.send(msg)
                 return redirect('/skmanager')
         except:
             return redirect('/update')
@@ -253,7 +253,7 @@ def code():
 
 @app.route('/status',methods = ['GET','POST'])
 def status():
-    if 'ussername' in session:
+    if 'username' in session:
         if request.method == "POST":
             status = request.form("status")
             name = session['username']
