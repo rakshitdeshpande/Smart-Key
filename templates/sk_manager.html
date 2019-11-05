@@ -50,7 +50,7 @@
                         <td class="label-cell">{{ i["dl_valid_till"] }}</td>
                         <td class="label-cell">{{ i["insuranceNo"] }}</td>
                         <td class="label-cell">{{ i["insurance_valid_till"] }}</td>
-                        <!--<td class="label-cell">{{ i["ignition"] }}</td>-->
+                        <td class="label-cell">{{ i["ignition_status"] }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -61,15 +61,15 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="label-cell">Start time</th>
-                            <th class="label-cell">Stop time</th>
+                            <th class="label-cell" align = "center">Start time</th>
+                            <th class="label-cell" align = "center">Stop time</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for i in logs %}
                         <tr>
-                                <td class="label-cell">{{ i["start"] }}</td>
-                                <td class="label-cell">{{ i["stop"] }}</td>
+                                <td class="label-cell"align = "center">{{ i["start"] }}</td>
+                                <td class="label-cell"align = "center">{{ i["stop"] }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

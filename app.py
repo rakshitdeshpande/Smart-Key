@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 app.secret_key = 'Smart-Key'
 
-file = open("password","r")
+file = open("./password","r")
 string = file.read()
 client = pymongo.MongoClient(string)
 db = client.test
