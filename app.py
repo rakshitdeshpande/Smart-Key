@@ -1,4 +1,4 @@
-import pymongo,datetime
+import pymongo,datetime,hashlib
 from flask import Flask, render_template, url_for, redirect, request ,flash ,session
 from pymongo import MongoClient
 from flask_mail import Mail,Message
@@ -44,7 +44,9 @@ def signup():
          rfid = request.form['rfid']
          if name == "" or email == "" or gender == "" or dob == "" or blood_group == "" or DLNo == "" or dl_valid_till == ""or insuranceNo == ""or insurance_valid_till == ""or password == ""or rfid == "":
              return redirect('/signup')
-         cred = {"name":name,"email":email,"phone_number":phone,"gender":gender,"dob":dob,"blood_group":blood_group,"DLNo":DLNo,"dl_valid_till":dl_valid_till,"insuranceNo":insuranceNo,"insurance_valid_till":insurance_valid_till,"password":password,"code":rfid,"ignition_status":"off","dl_validity":"","insurance_validity":""}
+         pass_256 = hashlib.sha256(password.encode())
+         pass_encrpt = pass_256.hexdigest()
+         cred = {"name":name,"email":email,"phone_number":phone,"gender":gender,"dob":dob,"blood_group":blood_group,"DLNo":DLNo,"dl_valid_till":dl_valid_till,"insuranceNo":insuranceNo,"insurance_valid_till":insurance_valid_till,"password":pass_encrpt,"code":rfid,"ignition_status":"off","dl_validity":"","insurance_validity":""}
          db.details.insert(cred)
          session['username'] = request.form['name']
          y = datetime.datetime.now()
@@ -102,7 +104,10 @@ def login():
                 session['username'] = request.form["name"]
                 return redirect('/dashboard')
             x = db.details.find({"name":request.form["name"]})
-            if(x[0]["password"] == request.form["password"]):
+            password = request.form["password"]
+            pass_256 = hashlib.sha256(password.encode())
+            pass_encrypt = pass_256.hexdigest()
+            if(x[0]["password"] == pass_encrypt):
                 session['username'] = request.form['name']
                 name = session['username']
                 y = datetime.datetime.now()
