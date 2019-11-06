@@ -293,12 +293,12 @@ def notFound(e):
 def delete():
     db.details.delete_many({})
     # db.logs.delete_many({})
-    return render_template("sucess.html")
+    return render_template("index.html")
 
 @app.route('/clear_log')
 def clear_log():
     db.logs.delete_many({})
-    return render_template("sucess.html")
+    return render_template("index.html")
 
 @app.route('/fetch')
 def fetch():
