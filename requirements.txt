@@ -1,4 +1,4 @@
 Flask
 pymongo
 flask_mail
-pymongo[srv]
+dnspython
