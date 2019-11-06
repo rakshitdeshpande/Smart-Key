@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body_content %}
+<div class="view view-main">
+    <div class="page-content">
+        <div class="navbar">
+            <div class="navbar-inner">
+              <div class="left">
+              </div>
+              <div class="title">Smart Key</div>
+              <!-- <div class="right">
+                 <a href="/signup" class="external" data-transition = "f7-dive"><button class="col button color-blue">Sign Up</button></a>
+                 <a href="/user_login" class="external" data-transition = "f7-parallax"><button class="col button color-blue">Login</button></a>
+              </div> -->
+            </div>
+          </div>
+      <div class="block">
+        <div id="block">
+          <p class="row text-align-justify justify-content-center">
+                <img src="static/images/logo.png" height="50%" width = "50%">
+          </p>
+        </div>
+      </div>
+      <form action="/login" class="external list form-store-data" id="my-form" method="POST">
+              <ul>
+                  <li class="item-content item-input">
+                      <div class="item-inner">
+                        <div class="item-input-wrap">
+                          <input type="text" placeholder="Your Name" name="name">
+                          <span class="input-clear-button"></span>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="item-content item-input">
+                      <div class="item-inner">
+                        <div class="item-input-wrap">
+                          <input type="password" placeholder="Password" name="password">
+                          <span class="input-clear-button"></span>
+                        </div>
+                      </div>
+                    </li>
+                <li class="padding">
+                  <input class="col button button-fill button-round open-toast-bottom" type="submit" value="Login">
+                </li>
+              </ul>
+            </form>
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+var $$ = Dom7;
+
+// Create bottom toast
+var toastBottom = app.toast.create({
+  text: 'Logging you in ...',
+  closeTimeout: 3000,
+});
+
+$$('.open-toast-bottom').on('click', function () {
+  toastBottom.open();
+});
+
+</script>
+{% endblock %}

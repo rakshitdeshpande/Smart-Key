@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %} Smart Key {% endblock %}
+
+{% block body_content %}
+      <div class = "views">
+         <div class = "view view-main navbar-through">
+            
+            <div class="page">
+               <div class="page-content">
+                 <!-- Static Navbar -->
+                 <div class="navbar">
+                   <div class="navbar-inner">
+                     <div class="left">
+                     </div>
+                     <div class="title">Smart Key</div>
+                     <div class="right">
+                        <a href="/signup" class="external" data-transition = "f7-dive"><button class="col button color-blue">Sign Up</button></a>
+                        <a href="/login" class="external" data-transition = "f7-parallax"><button class="col button color-blue">Login</button></a>
+                     </div>
+                   </div>
+                 </div>
+                 <!-- <p class="row text-align-justify justify-content-center">
+                    <img src="static/images/logo.png" height="30%" width = "30%">
+                  </p> -->
+                 <div class="block">
+                     <div class="card">
+                           <div class="card-header">About</div>
+                           <div class="card-content card-content-padding">
+                            People often forget their wallet while travelling which contain essential documents 
+                            driver’s license, insurance, registration certificate etc. Thus the idea is to create 
+                            a Smart Key which holds the information the owner of the vehicle and with this key the 
+                            vehicle can be started. The key will hold the necessary information which must match with
+                             the data stored in the database for the vehicle to start. Thus key-less starting of the
+                             vehicle can be achieved. This also prevents theft of the vehicle by sending a notification to the owner when the vehicle is driven by a thief. 
+                           </div>
+                         </div>
+                 </div>
+               </div>
+             </div>
+
+         </div>
+      </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

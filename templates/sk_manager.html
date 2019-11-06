@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}SK Manger{% endblock %}
+
+{% block body_content %}
+
+<div class = "views">
+    <div class = "view view-main navbar-through">
+       
+       <div class="page">
+          <div class="page-content">
+            <!-- Static Navbar -->
+            <div class="navbar">
+              <div class="navbar-inner">
+                <div class="left">
+                </div>
+                <div class="title">Smart Key</div>
+                <div class="right">
+                   <a href="/update" class = "external"><i class = "icon f7-icons " >pencil</i></a>
+                   <a href="/logout" class = "external"><i class = "icon f7-icons " >arrow_right_to_line</i></a>
+                </div>
+              </div>
+            </div>
+            
+        
+         <div class = "data-table card">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="label-cell">Name</th>
+                        <th class="label-cell">Email-Id</th>
+                        <th class="label-cell">Gender</th>
+                        <th class="label-cell">Date of Birth</th>
+                        <th class="label-cell">Blood Group</th>
+                        <th class="label-cell">DL No.</th>
+                        <th class="label-cell">DL Valid Till</th>
+                        <th class="label-cell">Insurance No.</th>
+                        <th class="label-cell">Insurance Valid Till</th>
+                        <th class="label-cell">Ignition Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+                    <tr>
+                        <td class="label-cell">{{ i["name"] }}</td>
+                        <td class="label-cell">{{ i["email"] }}</td>
+                        <td class="label-cell">{{ i["gender"] }}</td>
+                        <td class="label-cell">{{ i["dob"] }}</td>
+                        <td class="label-cell">{{ i["blood_group"] }}</td>
+                        <td class="label-cell">{{ i["DLNo"] }}</td>
+                        <td class="label-cell">{{ i["dl_valid_till"] }}</td>
+                        <td class="label-cell">{{ i["insuranceNo"] }}</td>
+                        <td class="label-cell">{{ i["insurance_valid_till"] }}</td>
+                        <td class="label-cell">{{ i["ignition_status"] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div> 
+        <p align ="center">Logs</p>
+        <div class = "data-table card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="label-cell" align = "center">Start time</th>
+                            <th class="label-cell" align = "center">Stop time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in logs %}
+                        <tr>
+                                <td class="label-cell"align = "center">{{ i["start"] }}</td>
+                                <td class="label-cell"align = "center">{{ i["stop"] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+
+       
+{% endblock %}
+
