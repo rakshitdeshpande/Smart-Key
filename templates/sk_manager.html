@@ -16,7 +16,7 @@
                 <div class="title">Smart Key</div>
                 <div class="right">
                    <a href="/update" class = "external"><i class = "icon f7-icons " >pencil</i></a>
-                   <a href="/logout" class = "external"><i class = "icon f7-icons " >arrow_right_to_line</i></a>
+                   <a href="/logout" class = "external open-toast-bottom"><i class = "icon f7-icons " >arrow_right_to_line</i></a>
                 </div>
               </div>
             </div>
@@ -79,3 +79,20 @@
        
 {% endblock %}
 
+{% block scripts %}
+<script type="text/javascript">
+
+var $$ = Dom7;
+
+// Create bottom toast
+var toastBottom = app.toast.create({
+  text: 'Logging out ...',
+  closeTimeout: 3000,
+});
+
+$$('.open-toast-bottom').on('click', function () {
+  toastBottom.open();
+});
+
+</script>
+{% endblock %}
