@@ -10,7 +10,7 @@ app.secret_key = 'Smart-Key'
 
 # file = open("password","r")
 # string = file.read()
-db_useranme = os.environ['DB_USERNAME']
+db_username = os.environ['DB_USERNAME']
 db_pass = os.environ['DB_PASS']
 client = pymongo.MongoClient("mongodb+srv://"+db_username+":"+db_pass+"@cluster0-qv6wg.mongodb.net/admin?retryWrites=true&w=majority")
 db = client.test
