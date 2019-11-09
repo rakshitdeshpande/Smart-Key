@@ -1,3 +1,6 @@
+'''
+Nokia IOT Smart-Key
+'''
 import pymongo,datetime,hashlib
 from flask import Flask, render_template, url_for, redirect, request ,flash ,session
 from pymongo import MongoClient
@@ -8,18 +11,19 @@ app = Flask(__name__)
 
 app.secret_key = 'Smart-Key'
 
-# file = open("password","r")
-# string = file.read()
+#accesing environment variables
+admin_name = os.environ['ADMIN_NAME']
+admin_pass = os.environ['ADMIN_PASS']
 db_username = os.environ['DB_USERNAME']
 db_pass = os.environ['DB_PASS']
-client = pymongo.MongoClient("mongodb+srv://"+db_username+":"+db_pass+"@cluster0-qv6wg.mongodb.net/admin?retryWrites=true&w=majority")
 db = client.test
-
-# file = open("id","r")
-# id = file.read()
 id = os.environ['MAIL_PASS']
 mail_id = os.environ['MAIL_ID']
 
+#connecting to database(mongodb)
+client = pymongo.MongoClient("mongodb+srv://"+db_username+":"+db_pass+"@cluster0-qv6wg.mongodb.net/admin?retryWrites=true&w=majority")
+
+#mail-parameters
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = mail_id
@@ -49,7 +53,7 @@ def signup():
          rfid = request.form['rfid']
          if name == "" or email == "" or gender == "" or dob == "" or blood_group == "" or DLNo == "" or dl_valid_till == ""or insuranceNo == ""or insurance_valid_till == ""or password == ""or rfid == "":
              return redirect('/signup')
-         pass_256 = hashlib.sha256(password.encode())
+         pass_256 = hashlib.sha256(password.encode())  #sha256 encryption
          pass_encrpt = pass_256.hexdigest()
          cred = {"name":name,"email":email,"phone_number":phone,"gender":gender,"dob":dob,"blood_group":blood_group,"DLNo":DLNo,"dl_valid_till":dl_valid_till,"insuranceNo":insuranceNo,"insurance_valid_till":insurance_valid_till,"password":pass_encrpt,"code":rfid,"ignition_status":"off","dl_validity":"","insurance_validity":""}
          db.details.insert(cred)
@@ -87,11 +91,7 @@ def signup():
              msg = Message('Insurance Expired', sender = mail_id, recipients = [email])
              msg.body = "Dear customer your Insurance has been expired, please renew it as early as possible"
              mail.send(msg)
-        
-        #  a = datetime.datetime.now()
-        #  time = a.strftime("%c")
-        #  log = {"name":request.form["name"],"login_time":time,"logout_time":"-"}
-        #  db.logs.insert(log)    
+    
          msg = Message('RTO', sender = mail_id, recipients = [email])
          msg.body = "You have successfully signed in"
          mail.send(msg)
@@ -105,8 +105,6 @@ def login():
         return render_template("login.html")
     elif request.method == "POST" :
         try:
-            admin_name = os.environ['ADMIN_NAME']
-            admin_pass = os.environ['ADMIN_PASS']
             if (request.form["name"] == admin_name and request.form["password"] == admin_pass):
                 session['username'] = request.form["name"]
                 return redirect('/dashboard')
@@ -153,10 +151,6 @@ def login():
                 msg = Message('RTO', sender = mail_id, recipients = [email])
                 msg.body = "You have successfully logged in"
                 mail.send(msg)
-                # a = datetime.datetime.now()
-                # time = a.strftime("%c")
-                # log = {"name":request.form["name"],"login_time":time,"logout_time":"-"}
-                # db.logs.insert(log)
                 return redirect(url_for("skmanager"))
             else:
                 return redirect("/login")
@@ -183,6 +177,7 @@ def dashboard():
             return render_template('dashboard.html',data = data,logs = logs)
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 
+#update the users details
 @app.route('/update',methods=['GET','POST'])
 def update():
     if 'username' in session:
@@ -251,6 +246,7 @@ def update():
     else:
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 
+#hardware
 @app.route('/code',methods=['GET','POST'])
 def code():
     if request.method == 'POST':
@@ -263,11 +259,12 @@ def code():
             except:
                 return "false"
 
+#updating ignition status 
 @app.route('/status',methods = ['GET','POST'])
 def status():
     if 'username' in session:
         if request.method == "POST":
-            status = request.form("status")
+            status = request.form["status"]
             name = session['username']
             if status == "1":
                 db.details.update({"name":name},{"$set":{"ignition_status":"on"}})
@@ -288,9 +285,6 @@ def status():
 def logout():
     try:
         name = session['username']
-        # a = datetime.datetime.now()
-        # time = a.strftime("%c")
-        # db.logs.update({"name":name,"logout_time":"-"},{"$set":{"logout_time":time}})
         session.pop('username', None)
         return redirect(url_for("index"))
     except:
@@ -303,23 +297,21 @@ def notFound(e):
 
 @app.route('/delete')
 def delete():
-    db.details.delete_many({})
-    # db.logs.delete_many({})
-    return render_template("index.html")
+    if 'username' in session and session['username'] == admin_name:
+        db.details.delete_many({})
+        # db.logs.delete_many({})
+        return render_template("index.html")
+    else:
+        return render_template("index.html")
 
 @app.route('/clear_log')
 def clear_log():
-    db.logs.delete_many({})
-    return render_template("index.html")
+    if 'username' in session and session['username'] == admin_name:
+        db.logs.delete_many({})
+        return render_template("index.html")
+    else:
+        return render_template("index.html")
 
-@app.route('/fetch')
-def fetch():
-    data = db.details.find()
-    return render_template("fetch.html",data = data)
-
-@app.route('/sample')
-def sample():
-    return render_template("sample.html")
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000, threaded = True, debug = True)
