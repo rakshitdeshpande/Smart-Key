@@ -16,12 +16,12 @@ admin_name = os.environ['ADMIN_NAME']
 admin_pass = os.environ['ADMIN_PASS']
 db_username = os.environ['DB_USERNAME']
 db_pass = os.environ['DB_PASS']
-db = client.test
 id = os.environ['MAIL_PASS']
 mail_id = os.environ['MAIL_ID']
 
 #connecting to database(mongodb)
 client = pymongo.MongoClient("mongodb+srv://"+db_username+":"+db_pass+"@cluster0-qv6wg.mongodb.net/admin?retryWrites=true&w=majority")
+db = client.test
 
 #mail-parameters
 app.config['MAIL_SERVER']='smtp.gmail.com'
