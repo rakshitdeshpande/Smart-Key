@@ -1,7 +1,7 @@
 '''
 Nokia IOT Smart-Key
 '''
-import pymongo,datetime,hashlib
+import pymongo,datetime,hashlib,pytz
 from flask import Flask, render_template, url_for, redirect, request ,flash ,session
 from pymongo import MongoClient
 from flask_mail import Mail,Message
@@ -19,7 +19,7 @@ db_pass = os.environ['DB_PASS']
 id = os.environ['MAIL_PASS']
 mail_id = os.environ['MAIL_ID']
 
-#connecting to database(mongodb)
+#connecting to database(mongodb)  datetime
 client = pymongo.MongoClient("mongodb+srv://"+db_username+":"+db_pass+"@cluster0-qv6wg.mongodb.net/admin?retryWrites=true&w=majority")
 db = client.test
 
@@ -58,7 +58,7 @@ def signup():
          cred = {"name":name,"email":email,"phone_number":phone,"gender":gender,"dob":dob,"blood_group":blood_group,"DLNo":DLNo,"dl_valid_till":dl_valid_till,"insuranceNo":insuranceNo,"insurance_valid_till":insurance_valid_till,"password":pass_encrpt,"code":rfid,"ignition_status":"off","dl_validity":"","insurance_validity":""}
          db.details.insert(cred)
          session['username'] = request.form['name']
-         y = datetime.datetime.now()
+         y = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
          date = y.strftime("%d")
          month = y.strftime("%m")
          year = y.strftime("%Y")
@@ -115,7 +115,7 @@ def login():
             if(x[0]["password"] == pass_encrypt):
                 session['username'] = request.form['name']
                 name = session['username']
-                y = datetime.datetime.now()
+                y = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
                 date = y.strftime("%d")
                 month = y.strftime("%m")
                 year = y.strftime("%Y")
@@ -202,7 +202,7 @@ def update():
                 if password != "":
                     db.details.update({"name":user},{"$set":{"password":password}})
 
-                y = datetime.datetime.now()
+                y = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
                 date = y.strftime("%d")
                 month = y.strftime("%m")
                 year = y.strftime("%Y")
@@ -267,10 +267,9 @@ def status():
             status = request.form['status']
             file = open("name","r")
             name = file.read()
-            print(name)
             if status == "1":
                 db.details.update({"name":name},{"$set":{"ignition_status":"on"}})
-                a = datetime.datetime.now()
+                a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
                 time = a.strftime("%c")
                 log = {"name":name,"start":time,"stop":"-"}
                 db.logs.insert(log)
@@ -281,7 +280,7 @@ def status():
                 mail.send(msg)
             else:
                 db.details.update({"name":name},{"$set":{"ignition_status":"off"}})
-                a = datetime.datetime.now()
+                a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
                 time = a.strftime("%c")
                 print(name)
                 db.logs.update({"name":name,"stop":"-"},{"$set":{"stop":time}})
