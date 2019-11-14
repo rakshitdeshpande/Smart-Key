@@ -255,6 +255,7 @@ def code():
                 x = db.details.find({"code":codeDetails})
                 name = x[0]["name"]
                 session['username'] = name
+                data = session['username']
                 return "true"
             except:
                 return "false"
@@ -262,30 +263,29 @@ def code():
 #updating ignition status 
 @app.route('/status',methods = ['GET','POST'])
 def status():
-    if 'username' in session:
         if request.method == "POST":
-            status = request.form["status"]
-            name = session['username']
+            status = request.form['status']
+            file = open("name","r")
+            name = file.read()
             print(name)
             if status == "1":
                 db.details.update({"name":name},{"$set":{"ignition_status":"on"}})
                 a = datetime.datetime.now()
                 time = a.strftime("%c")
-                log = {"name":request.form["name"],"start":time,"stop":"-"}
+                log = {"name":name,"start":time,"stop":"-"}
                 db.logs.insert(log)
-                print("ignition on")
+                data = db.details.find({"name":name})
+                email = data[0]["email"]
                 msg = Message('Ignition ON', sender = mail_id, recipients = [email])
-                msg.body = "Your vehicle has been turned ON"
+                msg.body = "Dear User, your vehicle has been turned on"
                 mail.send(msg)
             else:
                 db.details.update({"name":name},{"$set":{"ignition_status":"off"}})
                 a = datetime.datetime.now()
                 time = a.strftime("%c")
-                db.logs.update({"name":name,"start":"-"},{"$set":{"stop":time}})
-                print("igintion off")
-            return render_template("skmanager.html")
-    else:
-        return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
+                print(name)
+                db.logs.update({"name":name,"stop":"-"},{"$set":{"stop":time}})
+            return " True"
         
 @app.route("/logout")
 def logout():
