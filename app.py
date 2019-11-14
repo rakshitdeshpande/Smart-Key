@@ -250,7 +250,7 @@ def update():
 @app.route('/code',methods=['GET','POST'])
 def code():
     if request.method == 'POST':
-            codeDetails = request.form['code']
+            codeDetails = request.form["code"]
             try:
                 x = db.details.find({"code":codeDetails})
                 name = x[0]["name"]
@@ -266,17 +266,23 @@ def status():
         if request.method == "POST":
             status = request.form["status"]
             name = session['username']
+            print(name)
             if status == "1":
                 db.details.update({"name":name},{"$set":{"ignition_status":"on"}})
                 a = datetime.datetime.now()
                 time = a.strftime("%c")
                 log = {"name":request.form["name"],"start":time,"stop":"-"}
                 db.logs.insert(log)
+                print("ignition on")
+                msg = Message('Ignition ON', sender = mail_id, recipients = [email])
+                msg.body = "Your vehicle has been turned ON"
+                mail.send(msg)
             else:
                 db.details.update({"name":name},{"$set":{"ignition_status":"off"}})
                 a = datetime.datetime.now()
                 time = a.strftime("%c")
                 db.logs.update({"name":name,"start":"-"},{"$set":{"stop":time}})
+                print("igintion off")
             return render_template("skmanager.html")
     else:
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
@@ -299,7 +305,6 @@ def notFound(e):
 def delete():
     if 'username' in session and session['username'] == admin_name:
         db.details.delete_many({})
-        # db.logs.delete_many({})
         return render_template("index.html")
     else:
         return render_template("index.html")
