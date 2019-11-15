@@ -165,7 +165,9 @@ def skmanager():
         if 'username' in session:
             user = session['username']
             data = db.details.find({"name":user})
-            logs = db.logs.find({"name":user})
+            file = open("rfid","r")
+            rfid = file.read()
+            logs = db.logs.find({"rfid":"246799096137"})
             return render_template('sk_manager.html',data = data,logs = logs)
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 
@@ -258,10 +260,9 @@ def code():
             file.close()
             try:
                 x = db.details.find({"code":codeDetails})
-                name = x[0]["name"]
+                print(x[0]["code"])
                 return "true"
             except:
-                print(user_mail)
                 msg = Message('Un-Authenticated access', sender = mail_id, recipients = [user_mail])
                 msg.body = "Dear User, someone is trying to access your vehicle"
                 mail.send(msg)
@@ -283,9 +284,7 @@ def status():
                 f = open("rfid","r")
                 rfid = f.read()
                 log = {"name":user_name,"rfid":rfid,"start":time,"stop":"-"}
-                # log = {"name":user_name,"start":time,"stop":"-"}
                 db.logs.insert(log)
-                print(user_mail)
                 msg = Message('Ignition ON', sender = mail_id, recipients = [user_mail])
                 msg.body = "Dear User, your vehicle Ignition is ON"
                 mail.send(msg)
@@ -293,7 +292,9 @@ def status():
                 db.details.update({"name":user_name},{"$set":{"ignition_status":"off"}})
                 a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
                 time = a.strftime("%c")
-                db.logs.update({"name":user_name,"stop":"-"},{"$set":{"stop":time}})
+                file = open("rfid","r")
+                rfid = file.read()
+                db.logs.update({"name":user_name,"stop":"-","rfid":rfid},{"$set":{"stop":time}})
             return " True"
         
 @app.route("/logout")
