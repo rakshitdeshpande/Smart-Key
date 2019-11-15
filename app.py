@@ -18,6 +18,8 @@ db_username = os.environ['DB_USERNAME']
 db_pass = os.environ['DB_PASS']
 id = os.environ['MAIL_PASS']
 mail_id = os.environ['MAIL_ID']
+user_name = os.environ['USER_NAME']
+user_mail = os.environ['USER_MAIL']
 
 #connecting to database(mongodb)  datetime
 client = pymongo.MongoClient("mongodb+srv://"+db_username+":"+db_pass+"@cluster0-qv6wg.mongodb.net/admin?retryWrites=true&w=majority")
@@ -173,7 +175,7 @@ def dashboard():
         if 'username' in session and session['username'] == "admin":
             data = db.details.find({},{"_id":0})
             user = session['username']
-            logs = db.logs.find({"name":user})
+            logs = db.logs.find({})
             return render_template('dashboard.html',data = data,logs = logs)
         return "You are not logged in <br><a href = '/login'></b>" + "click here to log in</b></a>"
 
@@ -251,13 +253,22 @@ def update():
 def code():
     if request.method == 'POST':
             codeDetails = request.form["code"]
+            file = open("rfid","w")
+            file.write(codeDetails)
+            file.close()
             try:
                 x = db.details.find({"code":codeDetails})
                 name = x[0]["name"]
-                session['username'] = name
-                data = session['username']
                 return "true"
             except:
+                print(user_mail)
+                msg = Message('Un-Authenticated access', sender = mail_id, recipients = [user_mail])
+                msg.body = "Dear User, someone is trying to access your vehicle"
+                mail.send(msg)
+                file = open("rfid","r")
+                rfid = file.read()
+                log = {"name":user_name,"rfid":rfid,"start":"-","stop":"-"}
+                db.logs.insert(log)
                 return "false"
 
 #updating ignition status 
@@ -265,25 +276,24 @@ def code():
 def status():
         if request.method == "POST":
             status = request.form['status']
-            file = open("name","r")
-            name = file.read()
             if status == "1":
-                db.details.update({"name":name},{"$set":{"ignition_status":"on"}})
+                db.details.update({"name":user_name},{"$set":{"ignition_status":"on"}})
                 a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
                 time = a.strftime("%c")
-                log = {"name":name,"start":time,"stop":"-"}
+                f = open("rfid","r")
+                rfid = f.read()
+                log = {"name":user_name,"rfid":rfid,"start":time,"stop":"-"}
+                # log = {"name":user_name,"start":time,"stop":"-"}
                 db.logs.insert(log)
-                data = db.details.find({"name":name})
-                email = data[0]["email"]
-                msg = Message('Ignition ON', sender = mail_id, recipients = [email])
-                msg.body = "Dear User, your vehicle has been turned on"
+                print(user_mail)
+                msg = Message('Ignition ON', sender = mail_id, recipients = [user_mail])
+                msg.body = "Dear User, your vehicle Ignition is ON"
                 mail.send(msg)
             else:
-                db.details.update({"name":name},{"$set":{"ignition_status":"off"}})
+                db.details.update({"name":user_name},{"$set":{"ignition_status":"off"}})
                 a = datetime.datetime.now(pytz.timezone('Asia/Calcutta'))
                 time = a.strftime("%c")
-                print(name)
-                db.logs.update({"name":name,"stop":"-"},{"$set":{"stop":time}})
+                db.logs.update({"name":user_name,"stop":"-"},{"$set":{"stop":time}})
             return " True"
         
 @app.route("/logout")
