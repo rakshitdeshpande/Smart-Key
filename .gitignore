@@ -1,6 +1,7 @@
 smartkey.doc
 ngrok
-app(hardware).py
 config
+hardware.py
 screenshots
-smartkey.docx
+Report.pdf
+demo.mp4
